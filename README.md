@@ -154,4 +154,4 @@ Seq2Seq 논문은 이후의 자연어 처리 분야에서 다양한 응용에 �
 
 # ● 출처
 그림1 : https://ctkim.tistory.com/ <br>
-코드 구현 : https://www.kaggle.com/code/kmkarakaya/part-a-introduction-to-seq2seq-learning?cellIds=12&kernelSessionId=47250687
+그림2,3 : Sequence to Sequence Learning with Neural Networks 논문 발췌
