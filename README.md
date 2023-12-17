@@ -54,7 +54,7 @@ Seq2Seq 논문은 이후의 자연어 처리 분야에서 다양한 응용에 �
     from tensorflow.keras.models import Model
     from tensorflow.keras.layers import Input, LSTM, Dense
 
-# 데이터 준비
+# ● 데이터 준비
     input_texts = ["hello", "how are you", "goodbye"]
     target_texts = ["안녕", "잘 지내니", "안녕히 가세요"]
 
@@ -82,7 +82,7 @@ Seq2Seq 논문은 이후의 자연어 처리 분야에서 다양한 응용에 �
         if t > 0:
             decoder_target_data[i, t - 1, target_token_index[char]] = 1.0
 
-# 모델 정의
+# ● 모델 정의
     latent_dim = 256
 
     encoder_inputs = Input(shape=(None, num_encoder_tokens))
@@ -102,7 +102,7 @@ Seq2Seq 논문은 이후의 자연어 처리 분야에서 다양한 응용에 �
     model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
     model.fit([encoder_input_data, decoder_input_data], decoder_target_data, epochs=100, batch_size=1)
 
-# 예측을 위한 모델 정의
+# ● 예측을 위한 모델 정의
     encoder_model = Model(encoder_inputs, encoder_states)
 
     decoder_state_input_h = Input(shape=(latent_dim,))
@@ -115,7 +115,7 @@ Seq2Seq 논문은 이후의 자연어 처리 분야에서 다양한 응용에 �
 
     decoder_model = Model([decoder_inputs] + decoder_states_inputs, [decoder_outputs] + decoder_states)
 
-# 예측
+# ● 예측
     def decode_sequence(input_seq):
     states_value = encoder_model.predict(input_seq)
 
@@ -142,7 +142,7 @@ Seq2Seq 논문은 이후의 자연어 처리 분야에서 다양한 응용에 �
 
     return decoded_sentence
 
-# 예측 테스트
+# ● 예측 테스트
     for seq_index in range(len(input_texts)):
     input_seq = encoder_input_data[seq_index : seq_index + 1]
     decoded_sentence = decode_sequence(input_seq)
