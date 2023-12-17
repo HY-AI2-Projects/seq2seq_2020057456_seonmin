@@ -15,5 +15,51 @@
 ![image](https://github.com/HY-AI2-Projects/seq2seq_2020057456_seonmin/assets/153084250/4d74db0a-5b8f-4841-97fd-2d2e04d12a56)
  논문에서 제시 되었던 seq2seq에서는 start of sequence가 없었던 이유는 입력 문장 x는 여러개의 단어로 이루어져 있는데 이때 입력 문장의 단어의 개수와 출력 문자의 단어의 개수가 같을 필요가 없다고 합니다. 입력 문제는 하나의 context vector인 v로 바뀌게 돼고 이 v를 이용해서 매번 출력 결과를 디코더 파트를 거쳐서 결과 문장이 나올 수 있도록 만들 수 있습니다. 그래서 현 논문에서는 별도의 start of sequence가 없다고 가정하고 전개되었습니다.
 
+# ● seq2seq 코드 구현
+
+reverse_input_char_index = dict((i, char) for char, i in input_token_index.items())
+reverse_target_char_index = dict((i, char) for char, i in target_token_index.items())
+
+
+def decode_sequence(input_seq):
+    # Encode the input as state vectors.
+    states_value = encoder_model.predict(input_seq, verbose=0)
+
+    # Generate empty target sequence of length 1.
+    target_seq = np.zeros((1, 1, num_decoder_tokens))
+    # Populate the first character of target sequence with the start character.
+    target_seq[0, 0, target_token_index["\t"]] = 1.0
+
+    # Sampling loop for a batch of sequences
+    # (to simplify, here we assume a batch of size 1).
+    stop_condition = False
+    decoded_sentence = ""
+    while not stop_condition:
+        output_tokens, h, c = decoder_model.predict(
+            [target_seq] + states_value, verbose=0
+        )
+
+        # Sample a token
+        sampled_token_index = np.argmax(output_tokens[0, -1, :])
+        sampled_char = reverse_target_char_index[sampled_token_index]
+        decoded_sentence += sampled_char
+
+        # Exit condition: either hit max length
+        # or find stop character.
+        if sampled_char == "\n" or len(decoded_sentence) > max_decoder_seq_length:
+            stop_condition = True
+
+        # Update the target sequence (of length 1).
+        target_seq = np.zeros((1, 1, num_decoder_tokens))
+        target_seq[0, 0, sampled_token_index] = 1.0
+
+        # Update states
+        states_value = [h, c]
+    return decoded_sentence
+
+
+
+
 # ● 출처
 그림1 : https://ctkim.tistory.com/
+코드 구현 : https://www.kaggle.com/code/kmkarakaya/part-a-introduction-to-seq2seq-learning?cellIds=12&kernelSessionId=47250687
