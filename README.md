@@ -98,7 +98,7 @@ Seq2Seq 논문은 이후의 자연어 처리 분야에서 다양한 응용에 �
 
     model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 
-# 모델 컴파일 및 훈련
+# ● 모델 컴파일 및 훈련
     model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
     model.fit([encoder_input_data, decoder_input_data], decoder_target_data, epochs=100, batch_size=1)
 
