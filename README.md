@@ -1,0 +1,2 @@
+# seq2seq_2020057456_seonmin
+seq2seq_2020057456_seonmin_기말과제수행
